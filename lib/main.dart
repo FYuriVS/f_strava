@@ -110,6 +110,18 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            log(_locationData.toString());
+            mapController.move(
+                LatLng(_locationData?.latitude ?? 0,
+                    _locationData?.longitude ?? 0),
+                16);
+          });
+        },
+        child: const Icon(Icons.my_location),
+      ),
     );
   }
 }
