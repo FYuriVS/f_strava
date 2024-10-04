@@ -1,4 +1,4 @@
-# f_strava
+# destrava
 
 A new Flutter project.
 

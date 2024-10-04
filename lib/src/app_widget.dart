@@ -1,8 +1,8 @@
-import 'package:f_strava/controllers/navigation.controller.dart';
-import 'package:f_strava/main.dart';
-import 'package:f_strava/pages/activity_page.dart';
-import 'package:f_strava/pages/home_page.dart';
-import 'package:f_strava/pages/statistics_page.dart';
+import 'package:destrava/src/controllers/navigation.controller.dart';
+import 'package:destrava/main.dart';
+import 'package:destrava/src/pages/activity_page.dart';
+import 'package:destrava/src/pages/home_page.dart';
+import 'package:destrava/src/pages/statistics_page.dart';
 import 'package:flutter/material.dart';
 
 class AppWidget extends StatefulWidget {
@@ -15,6 +15,11 @@ class AppWidget extends StatefulWidget {
 class _AppWidgetState extends State<AppWidget> {
   final NavigationNotifier navigationNotifier =
       getIt.get(instanceName: 'navigation');
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   int currentPageIndex = 0;
 
@@ -30,14 +35,28 @@ class _AppWidgetState extends State<AppWidget> {
 
   @override
   Widget build(BuildContext context) {
-    NavigationDestinationLabelBehavior labelBehavior =
-        NavigationDestinationLabelBehavior.alwaysShow;
     return Scaffold(
       appBar: AppBar(
         notificationPredicate: (notification) => false,
-        title: const Text("Olá... Até onde iremos hoje?"),
+        leadingWidth: 190,
+        title: const Text("Olá, Yuri Vital"),
+        actions: [
+          IconButton.outlined(onPressed: () {}, icon: const Icon(Icons.person))
+        ],
       ),
       body: _buildPageView(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ActivityPage(
+                      title: '',
+                    )),
+          );
+        },
+        child: const Icon(Icons.directions_run),
+      ),
     );
   }
 

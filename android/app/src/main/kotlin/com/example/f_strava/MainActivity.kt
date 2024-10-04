@@ -1,4 +1,4 @@
-package com.example.f_strava
+package com.example.destrava
 
 import io.flutter.embedding.android.FlutterActivity
 

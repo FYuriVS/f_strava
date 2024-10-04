@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "f_strava" "\0"
+            VALUE "FileDescription", "destrava" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "f_strava" "\0"
+            VALUE "InternalName", "destrava" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "f_strava.exe" "\0"
-            VALUE "ProductName", "f_strava" "\0"
+            VALUE "OriginalFilename", "destrava.exe" "\0"
+            VALUE "ProductName", "destrava" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
