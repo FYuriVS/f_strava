@@ -1,5 +1,7 @@
+import 'dart:math';
+
 import 'package:destrava/main.dart';
-import 'package:destrava/src/services/activity_servide.dart';
+import 'package:destrava/src/models/route_model.dart';
 import 'package:destrava/src/states/activity_state.dart';
 import 'package:destrava/src/states/location_state.dart';
 import 'package:destrava/src/stores/activity_store.dart';
@@ -26,77 +28,78 @@ class _ActivityPageState extends State<ActivityPage> {
   LocationData? _locationData;
   bool initMap = false;
   DateTime? initialTime;
+  List<RouteModel> completedRoute = [];
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ValueListenableBuilder(
-        valueListenable: activityStore,
-        builder: (context, value, child) {
-          return Scaffold(
-            extendBodyBehindAppBar: true,
-            body: ValueListenableBuilder(
-              valueListenable: locationStore,
-              builder: (context, value, child) {
-                if (value is SuccessLocationState) {
-                  _locationData = value.location;
-                }
-                return Stack(
-                  children: [
-                    FlutterMap(
-                      mapController: mapController,
-                      options: MapOptions(
-                          initialCenter: LatLng(_locationData?.latitude ?? 0,
-                              _locationData?.longitude ?? 0),
-                          initialZoom: 15.0),
-                      children: [
-                        TileLayer(
-                          urlTemplate:
-                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          userAgentPackageName: 'com.example.app',
-                        ),
-                        MarkerLayer(
-                          markers: [
-                            Marker(
-                              point: LatLng(_locationData?.latitude ?? 0,
-                                  _locationData?.longitude ?? 0),
-                              width: 10,
-                              height: 10,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: Colors.red,
-                                ),
+    return ValueListenableBuilder(
+      valueListenable: activityStore,
+      builder: (context, value, child) {
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          body: ValueListenableBuilder(
+            valueListenable: locationStore,
+            builder: (context, value, child) {
+              if (value is SuccessLocationState) {
+                _locationData = value.location;
+              }
+              return Stack(
+                children: [
+                  FlutterMap(
+                    mapController: mapController,
+                    options: MapOptions(
+                        initialCenter: LatLng(_locationData?.latitude ?? 0,
+                            _locationData?.longitude ?? 0),
+                        initialZoom: 15.0),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName: 'com.example.app',
+                      ),
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            point: LatLng(_locationData?.latitude ?? 0,
+                                _locationData?.longitude ?? 0),
+                            width: 10,
+                            height: 10,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.red,
                               ),
                             ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Positioned(
-                      top: 16,
-                      left: 16,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          padding:
-                              const WidgetStatePropertyAll(EdgeInsets.zero),
-                          backgroundColor: WidgetStatePropertyAll(
-                              Theme.of(context).colorScheme.primaryContainer),
-                          fixedSize: const WidgetStatePropertyAll(
-                            Size(10, 10),
                           ),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Icon(Icons.arrow_back),
+                        ],
                       ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 20,
+                    left: 20,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                        backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).colorScheme.primaryContainer),
+                        fixedSize: const WidgetStatePropertyAll(
+                          Size(10, 10),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(Icons.arrow_back),
                     ),
-                  ],
-                );
-              },
-            ),
-            floatingActionButton: SizedBox(
+                  ),
+                ],
+              );
+            },
+          ),
+          floatingActionButton: ValueListenableBuilder(
+            valueListenable: activityStore,
+            builder: (context, value, child) => SizedBox(
               height: 100,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -124,7 +127,7 @@ class _ActivityPageState extends State<ActivityPage> {
                         ),
                         onPressed: () {
                           value is InitialActivityState
-                              ? initActivity()
+                              ? initActivity(locationStore)
                               : completeActivity();
                         },
                         child: value is InitialActivityState
@@ -143,21 +146,38 @@ class _ActivityPageState extends State<ActivityPage> {
                 ),
               ),
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-          );
-        },
-      ),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+        );
+      },
     );
   }
 
-  void initActivity() {
+  void initActivity(subscription) {
     activityStore.startActivity();
+
     initialTime = DateTime.now().toUtc();
+    startTrackingLocation(subscription);
+  }
+
+  void startTrackingLocation(location) {
+    location.locationService.location.onLocationChanged.listen(
+      (LocationData locationData) {
+        completedRoute.add(
+          RouteModel(
+            lat: locationData.latitude!,
+            long: locationData.longitude!,
+          ),
+        );
+      },
+    );
   }
 
   void completeActivity() {
-    activityStore.completeActivity(initialTime);
+    activityStore.completeActivity(initialTime, completedRoute);
+    activityStore.dispose();
+    print(completedRoute);
   }
 
   void moveMarker() {

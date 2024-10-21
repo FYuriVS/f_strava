@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:destrava/src/services/activity_servide.dart';
+import 'package:destrava/src/services/activity_service.dart';
 import 'package:destrava/src/states/activity_state.dart';
 import 'package:flutter/material.dart';
 
 class ActivityStore extends ValueNotifier<ActivityState> {
   final ActivityService activityService;
-  StreamSubscription? _activitySubscription;
+  StreamSubscription? activitySubscription;
 
   ActivityStore(this.activityService) : super(InitialActivityState());
   Future<void> startActivity() async {
@@ -14,11 +14,11 @@ class ActivityStore extends ValueNotifier<ActivityState> {
     value = StartedActivityState(DateTime.now().toUtc());
   }
 
-  Future<void> completeActivity(initialTime) async {
+  Future<void> completeActivity(initialTime, route) async {
     value = LoadingActivityState();
 
     try {
-      activityService.saveActivity(initialTime);
+      activityService.saveActivity(initialTime, route);
       value = CompletedActivityState("Atividade concluida!");
     } catch (e) {
       value = ErrorActivityState("Erro ao concluir a atividade");
@@ -27,7 +27,7 @@ class ActivityStore extends ValueNotifier<ActivityState> {
 
   @override
   void dispose() {
-    _activitySubscription?.cancel();
+    activitySubscription?.cancel();
     super.dispose();
   }
 }

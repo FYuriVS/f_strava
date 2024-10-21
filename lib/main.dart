@@ -1,6 +1,8 @@
 import 'package:destrava/src/controllers/navigation.controller.dart';
 import 'package:destrava/src/app_widget.dart';
-import 'package:destrava/src/services/activity_servide.dart';
+import 'package:destrava/src/pages/signin_page.dart';
+import 'package:destrava/src/pages/signup_page.dart';
+import 'package:destrava/src/services/activity_service.dart';
 import 'package:destrava/src/stores/location_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -78,7 +80,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const AppWidget(),
+      home: const SignInPage(),
     );
   }
 }

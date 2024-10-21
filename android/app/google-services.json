@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "189421328361",
+    "project_id": "destrava-758df",
+    "storage_bucket": "destrava-758df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:189421328361:android:7355fec16563a13c86dd78",
+        "android_client_info": {
+          "package_name": "com.destrava.auth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVD2exJWu_zctUsKwKcahSU-QzB5tVLv0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "189421328361-d39ms2stbrdlamirmlvoqg7tt5sknadj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "189421328361-3gk6mp6n3h4d5ua5kojln0v6umv75bi2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fStrava"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
