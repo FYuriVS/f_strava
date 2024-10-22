@@ -1,9 +1,9 @@
 import 'package:destrava/src/controllers/navigation.controller.dart';
-import 'package:destrava/src/app_widget.dart';
 import 'package:destrava/src/pages/signin_page.dart';
-import 'package:destrava/src/pages/signup_page.dart';
 import 'package:destrava/src/services/activity_service.dart';
+import 'package:destrava/src/services/login_service.dart';
 import 'package:destrava/src/stores/location_store.dart';
+import 'package:destrava/src/stores/login_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get_it/get_it.dart';
@@ -29,6 +29,10 @@ void setupDI() {
   getIt.registerSingleton<LocationStore>(LocationStore(),
       instanceName: 'location');
   getIt.registerSingleton<SupabaseClient>(Supabase.instance.client);
+  getIt.registerSingleton<LoginService>(LoginService(Supabase.instance.client));
+  getIt.registerSingleton<LoginStore>(
+      LoginStore(loginService: getIt.get<LoginService>()));
+
   getIt.registerSingleton<ActivityService>(
       ActivityService(getIt.get<SupabaseClient>()),
       instanceName: 'activityService');

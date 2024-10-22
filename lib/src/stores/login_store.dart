@@ -1,12 +1,10 @@
-import 'package:destrava/main.dart';
 import 'package:destrava/src/services/login_service.dart';
 import 'package:destrava/src/states/login_state.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginStore extends ValueNotifier<LoginState> {
-  LoginService loginService = LoginService(getIt.get<SupabaseClient>());
-  LoginStore() : super(InitialLoginState());
+  LoginService loginService;
+  LoginStore({required this.loginService}) : super(InitialLoginState());
 
   Future signIn(
     String email,
@@ -15,7 +13,7 @@ class LoginStore extends ValueNotifier<LoginState> {
     value = LoadingLoginState();
 
     try {
-      final result = await loginService.signIn(password, email);
+      final result = await loginService.signIn(email, password);
       value = SuccessLoginState(result.toString());
     } catch (e) {
       value = ErrorLoginState(e.toString());
@@ -25,11 +23,27 @@ class LoginStore extends ValueNotifier<LoginState> {
   Future signUp(
     String email,
     String password,
-    Map<String, dynamic> data,
   ) async {
     value = LoadingLoginState();
     try {
-      final result = await loginService.signUp(password, email, data);
+      final result = await loginService.signUp(password, email);
+      value = RegisteredLoginState(result.user.id);
+    } catch (e) {
+      value = ErrorLoginState(e.toString());
+    }
+  }
+
+  Future createProfile(
+    String id,
+    String name,
+    String email,
+    String profilePictureUrl,
+    String createdAt,
+    String updatedAt,
+  ) async {
+    try {
+      final result = await loginService.createProfile(
+          id, name, email, profilePictureUrl, createdAt, updatedAt);
       value = SuccessLoginState(result.toString());
     } catch (e) {
       value = ErrorLoginState(e.toString());

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:destrava/main.dart';
 import 'package:destrava/src/models/route_model.dart';
 import 'package:destrava/src/states/activity_state.dart';
@@ -177,7 +175,6 @@ class _ActivityPageState extends State<ActivityPage> {
   void completeActivity() {
     activityStore.completeActivity(initialTime, completedRoute);
     activityStore.dispose();
-    print(completedRoute);
   }
 
   void moveMarker() {

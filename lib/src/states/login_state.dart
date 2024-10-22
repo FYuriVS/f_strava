@@ -11,6 +11,11 @@ class SuccessLoginState extends LoginState {
 //Loading
 class LoadingLoginState extends LoginState {}
 
+class RegisteredLoginState extends LoginState {
+  String userId;
+  RegisteredLoginState(this.userId);
+}
+
 //Error
 class ErrorLoginState extends LoginState {
   final String message;
